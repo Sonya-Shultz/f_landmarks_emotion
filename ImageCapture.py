@@ -1,13 +1,12 @@
 from pygrabber.dshow_graph import FilterGraph
 
-from DistanceCalculator import DistanceCalculator
+from data.DistanceCalculator import DistanceCalculator
 from FacedetectionModul import Facedetection, LandmarksDetection
 import cv2
 from CLAHEModul import CLAHE
 from DrawingModul import DrawingModul
 from EmotionModul import EmotionRecognition
 from LandmarksModul import LandmarksPositioning, LandmarksPositioningV2
-from data.Face import Face
 from data.Utils import Utils
 
 

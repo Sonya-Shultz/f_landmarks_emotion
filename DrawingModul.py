@@ -33,12 +33,12 @@ class DrawingModul:
                 scale = max(raw_l[2], raw_l[3])
                 for n in range(0, 68):
                     if type(landmark) in [np.ndarray]:
-                        x = int(landmark[0, n*2] * scale + raw_l[0])
-                        y = int(landmark[0, n*2+1] * scale + raw_l[1])
+                        x = round(landmark[0, n*2] * scale + raw_l[0])
+                        y = round(landmark[0, n*2+1] * scale + raw_l[1])
                     elif type(landmark) in [list]:
                         if type(landmark[n*2]) is not int:
-                            x = int(landmark[n*2] * scale + raw_l[0])
-                            y = int(landmark[n*2+1] * scale + raw_l[1])
+                            x = round(landmark[n*2] * scale + raw_l[0])
+                            y = round(landmark[n*2+1] * scale + raw_l[1])
                         else:
                             x = landmark[n*2] + raw_l[0]
                             y = landmark[n*2+1] + raw_l[1]

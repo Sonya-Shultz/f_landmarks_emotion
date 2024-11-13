@@ -3,12 +3,14 @@ import numpy as np
 import cv2
 from tqdm import tqdm
 
+from CLAHEModul import CLAHE
 from EmotionModul import EmotionRecognition
 from FacedetectionModul import Facedetection, LandmarksDetection
 
 # face_detector = Facedetection()
 face_detector = LandmarksDetection()
 emotion_model = EmotionRecognition()
+CLAHE_modul = CLAHE()
 
 df = pd.read_csv('training_frames_keypoints.csv')
 new_data = []
@@ -18,6 +20,7 @@ landmark_columns = df.columns[1:]
 for index, row in tqdm(df.iterrows(), total=df.shape[0]):
     img_path = f"training/{row['image_name']}"
     img = cv2.imread(img_path)
+    img = CLAHE_modul.apply(img)
 
     face_detector.detect(img)
     faces = face_detector.get_faces()

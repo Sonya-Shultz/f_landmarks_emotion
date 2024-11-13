@@ -19,11 +19,11 @@ class LandmarksPositioning:
 
 class LandmarksPositioningV2:
     def __init__(self):
-        self.model = load_model("LandmarksModel/LandmarksModel_v2.h5")
+        self.model = load_model("LandmarksModel/LandmarksModel_v3.h5")
         pass
 
     @staticmethod
-    def __combine_landmarks(old_landmarks, new_landmarks, sf=0.3):
+    def __combine_landmarks(old_landmarks, new_landmarks, sf=0.2):  # 0.3 for v2
         combined_landmarks = []
         for j in range(len(old_landmarks)):
             combined_landmark = [0 for _ in range(len(old_landmarks[j])*2)]
