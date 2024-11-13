@@ -16,7 +16,7 @@ emotion_model = EmotionRecognition()
 landmarks_model = LandmarksPositioningV2()
 CLAHE_modul = CLAHE()
 
-df = pd.read_csv('training_frames_keypoints.csv')
+df = pd.read_csv('../training_frames_keypoints.csv')
 new_data = []
 my_data = []
 right_data = []

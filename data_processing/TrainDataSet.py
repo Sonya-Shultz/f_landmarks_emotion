@@ -12,7 +12,7 @@ face_detector = LandmarksDetection()
 emotion_model = EmotionRecognition()
 CLAHE_modul = CLAHE()
 
-df = pd.read_csv('training_frames_keypoints.csv')
+df = pd.read_csv('../training_frames_keypoints.csv')
 new_data = []
 right_data = []
 landmark_columns = df.columns[1:]
