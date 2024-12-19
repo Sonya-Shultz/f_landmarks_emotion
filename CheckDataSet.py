@@ -16,7 +16,7 @@ emotion_model = EmotionRecognition()
 landmarks_model = LandmarksPositioningV2()
 CLAHE_modul = CLAHE()
 
-df = pd.read_csv('../training_frames_keypoints.csv')
+df = pd.read_csv('training_frames_keypoints.csv')
 new_data = []
 my_data = []
 right_data = []
@@ -26,9 +26,15 @@ counter = 0
 mae_list = []
 mae_full = []
 
+print(f"SIZE: {df.shape[0]}")
+print(f"SIZE: {df.shape}")
+
+COUNTER = 5000000
+face_right_proc = 1.0
+
 for index, row in tqdm(df.iterrows(), total=df.shape[0]):
     counter += 1
-    if counter > 50000:
+    if counter > COUNTER:
         break
     img_path = f"training/{row['image_name']}"
     img = cv2.imread(img_path)
@@ -84,6 +90,7 @@ for index, row in tqdm(df.iterrows(), total=df.shape[0]):
         for i in range(len(right_landmarks) // 2)
     ]
     # print(f"my_mae: {my_mae}, lib_mae: {lib_mae}")
+
     mae_list.append((my_mae, lib_mae))
     mae_full.append((my_mae_full, lib_mae_full))
 
@@ -91,38 +98,30 @@ import matplotlib.pyplot as plt
 line1_values = [point[0] for point in mae_list]
 line2_values = [point[1] for point in mae_list]
 diff = [point[0] - point[1] for point in mae_list]
-diff_full = [[p1-p2 for p1, p2 in zip(point[0], point[1])] for point in mae_full]
+diff_full = [[p1-p2-1 for p1, p2 in zip(point[0], point[1])] for point in mae_full]
 diff_fll_flat = []
 for point in diff_full:
     diff_fll_flat.extend(point)
-print(len(diff_fll_flat))
-time = list(range(1, len(mae_list) + 1))
+print(f"FACE DOTS: {len(diff_fll_flat)}")
+mean_faces = 0.0
+faces_count = len(diff_fll_flat)//68
+for i in range(0, faces_count):
+    mean_face = 0.0
+    for j in range(68):
+        mean_face += 1.0/68 if diff_fll_flat[i*68+j] < 0 else 0.0
+    mean_faces += mean_face/faces_count
 
-# plt.plot(time, line1_values, label='my_mae', marker='o')
-# plt.plot(time, line2_values, label='lib_mae', marker='o')
-# plt.plot(time, diff, label='mae різниця', marker='o')
-#
-#
-# # Add labels and title
-# plt.xlabel('No Зображення')
-# plt.ylabel('Пікселів')
-# plt.title('Різниця середньої абсолютної помилки що до дійсних точок для моєї та бібліотечної реалізацій')
-# plt.legend()
-# plt.show()
+print(f"MEAN FACE IMPROV: {mean_faces*100}%")
 
 plt.figure(figsize=(12, 5))
-
-plt.subplot(1, 2, 1)
-plt.hist(diff_fll_flat, bins=10, color='skyblue', edgecolor='black')
-plt.xlabel('MAE різниця')
-plt.ylabel('Частота')
+xticks = np.arange(-8, 6, 1)
+plt.xticks(xticks)
+plt.tick_params(axis='x')
+plt.hist(diff_fll_flat, bins=15, color='skyblue', edgecolor='black', align='mid')
+plt.xlabel('MAE різниця (пікселі)')
+plt.ylabel('Частота (к-ть точок)')
 plt.title('Гістограма різниці MAE між моєю та бібліотечною реалізацією (що до дійсних точок)')
 
-# Box plot to show dispersion
-plt.subplot(1, 2, 2)
-plt.boxplot(diff_fll_flat, vert=False, patch_artist=True, boxprops=dict(facecolor='skyblue'))
-plt.xlabel('MAE різниця')
-plt.title('Дисперсія різниці MAE між моєю та бібліотечною реалізацією (що до дійсних точок)')
 
 plt.tight_layout()
 plt.show()
